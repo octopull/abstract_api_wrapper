@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = %q{An abstract REST API wrapper}
   spec.description   = %q{An abstract REST API wrapper}
-  spec.homepage      = "https://github.com/octopull/abstract-api-wrapper"
+  spec.homepage      = "https://github.com/octopull/abstract_api_wrapper"
 
   spec.files         = `git ls-files`.split("\n")
   spec.bindir        = 'exe'
