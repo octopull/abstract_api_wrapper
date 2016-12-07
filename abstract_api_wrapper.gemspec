@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['juan@octopull.us']
 
   spec.summary       = %q{An abstract REST API wrapper}
-  spec.description   = %q{An abstract REST API wrapper}
+  spec.description   = %q{An abstract REST API wrapper based on missing_method magic}
   spec.homepage      = "https://github.com/octopull/abstract_api_wrapper"
 
   spec.files         = `git ls-files`.split("\n")
@@ -18,12 +18,12 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'json'    , '~> 2.0.2'
-  spec.add_dependency 'faraday' , '~> 0.10.0'
-  spec.add_dependency 'hashie'  , '~> 3.4.6'
+  spec.add_dependency 'json'    , '~> 2.0'
+  spec.add_dependency 'faraday' , '~> 0.10'
+  spec.add_dependency 'hashie'  , '~> 3.4'
 
   spec.add_development_dependency 'bundler' , '~> 1.11'
   spec.add_development_dependency 'rake'    , '~> 10.0'
-  spec.add_development_dependency 'rspec'   , '~> 3.5.0'
-  spec.add_development_dependency 'webmock' , '~> 1.24.2'
+  spec.add_development_dependency 'rspec'   , '~> 3.5'
+  spec.add_development_dependency 'webmock' , '~> 1.24'
 end
