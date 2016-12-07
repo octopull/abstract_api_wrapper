@@ -11,7 +11,7 @@ TEST_OPTIONS = {
   access_token: 'mysupersecrettoken'
 }
 
-describe AbstractApiWrapper do
+describe 'AbstractApiWrapper' do
   describe 'Client' do
     it 'should create a Client with the given options' do
       client = AbstractApiWrapper::Client.new(TEST_OPTIONS)

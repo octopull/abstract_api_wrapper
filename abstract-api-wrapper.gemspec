@@ -1,10 +1,10 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'abstract-api-wrapper/version'
+require 'abstract_api_wrapper/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'abstract-api-wrapper'
+  spec.name          = 'abstract_api_wrapper'
   spec.version       = AbstractApiWrapper::VERSION
   spec.authors       = ['Juan Puelpan']
   spec.email         = ['juan@octopull.us']
