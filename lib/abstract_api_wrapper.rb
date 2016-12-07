@@ -1,3 +1,4 @@
+require 'abstract-api-wrapper/version'
 require 'json'
 require 'faraday'
 require 'hashie/mash'
