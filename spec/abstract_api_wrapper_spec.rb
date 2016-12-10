@@ -1,9 +1,4 @@
-$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
-require 'webmock/rspec'
-require 'abstract_api_wrapper'
-
-include WebMock::API
-WebMock.enable!
+require 'helper'
 
 TEST_OPTIONS = {
   base_url: 'https://mysuperapi.com/api',
@@ -66,7 +61,7 @@ describe 'AbstractApiWrapper' do
       @client = AbstractApiWrapper::Client.new(TEST_OPTIONS)
 
       stub_request(:get, TEST_OPTIONS[:base_url])
-        .to_return(:status => 200, :body => '[]')
+        .to_return(status: 200, body: '[]')
 
       @request = Faraday.get(TEST_OPTIONS[:base_url])
     end

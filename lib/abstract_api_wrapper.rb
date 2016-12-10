@@ -14,7 +14,7 @@ class AbstractApiWrapper
     end
 
     def method_missing(name, *params, &block)
-      AbstractApiWrapper::Request.new(name.to_s, self)
+      Request.new(name.to_s, self)
     end
   end
 
@@ -80,7 +80,7 @@ class AbstractApiWrapper
       params = @params.any? ? @params.to_json : nil
 
       request = Faraday.send(method, endpoint, params, headers)
-      response = AbstractApiWrapper::Response.new(request)
+      response = Response.new(request)
 
       # Reset variables
       path    = []
@@ -122,13 +122,13 @@ class AbstractApiWrapper
 
     def body
       if @parsed_body.is_a?(Hash)
-        AbstractApiWrapper::Response::Resource.new(@parsed_body, @request)
+        Response::Resource.new(@parsed_body, @request)
       elsif @parsed_body.is_a?(Array)
         collection = @parsed_body.map do |item|
-          AbstractApiWrapper::Response::Resource.new(item)
+          Response::Resource.new(item)
         end
 
-        AbstractApiWrapper::Response::Collection.new(collection, @request)
+        Response::Collection.new(collection, @request)
       end
     end
 
