@@ -36,6 +36,22 @@ describe 'AbstractApiWrapper' do
       expect(user.object_id).to eq(project.object_id)
     end
 
+    it 'should set a Collection instance for an array response' do
+      stub_request(:get, "#{TEST_OPTIONS[:base_url]}/users?apiver=v3")
+        .to_return(status: 200, body: '[]')
+
+      users = @client.users.all.run
+      expect(users).to be_kind_of(AbstractApiWrapper::Response::Collection)
+    end
+
+    it 'should set a Resource instance for an object response' do
+      stub_request(:get, "#{TEST_OPTIONS[:base_url]}/users/1?apiver=v3")
+        .to_return(status: 200, body: '{}')
+
+      user = @client.users.find(1).run
+      expect(user).to be_kind_of(AbstractApiWrapper::Response::Resource)
+    end
+
     it 'should create a path as array' do
       request = @client.users.find(1)
       expect(request.path).to be_kind_of(Array)
@@ -49,10 +65,45 @@ describe 'AbstractApiWrapper' do
       expect(request.filters).to eq({ 'active' => true })
     end
 
-    it 'should set the path chain' do
+    it 'should set the path chain to get a collection' do
       request = @client.users.find(1).projects.all(active: true)
-      expect(request.chain).to be_kind_of(Array)
       expect(request.chain).to eq(['users', 'find', 'projects', 'all'])
+      expect(request.path).to eq(['users', '1', 'projects'])
+      expect(request.filters).to eq({'active' => true})
+    end
+
+    it 'should set the path chain to make a head request' do
+      request = @client.users.find(1).projects.all(active: true).head
+      expect(request.chain).to eq(['users', 'find', 'projects', 'all', 'head'])
+      expect(request.path).to eq(['users', '1', 'projects'])
+      expect(request.filters).to eq({'active' => true})
+    end
+
+    it 'should set the path to create resource' do
+      request = @client.users.create(name: 'Jon Snow')
+      expect(request.chain).to eq(['users', 'create'])
+      expect(request.path).to eq(['users'])
+      expect(request.params).to eq({ 'name' => 'Jon Snow' })
+    end
+
+    it 'should set the path to update a resource' do
+      request = @client.users.find(1).update(name: 'Jon Targaryen')
+      expect(request.chain).to eq(['users', 'find', 'update'])
+      expect(request.path).to eq(['users', '1'])
+      expect(request.params).to eq({ 'name' => 'Jon Targaryen' })
+    end
+
+    it 'should set the path to delete a resoure' do
+      request = @client.users.find(1).destroy
+      expect(request.chain).to eq(['users', 'find', 'destroy'])
+      expect(request.path).to eq(['users', '1'])
+      expect(request.params).to eq({})
+    end
+
+    it 'should raise an error if no resoure to destroy is given' do
+      expect {
+        request = @client.users.destroy
+      }.to raise_error(AbstractApiWrapper::Request::NoResourceGiven)
     end
   end
 
@@ -100,9 +151,24 @@ describe 'AbstractApiWrapper' do
       end
     end
 
-    # TODO: Collection tests
-    # describe 'Collection' do
-    # end
+    describe 'Collection' do
+      before(:each) do
+        @items = [
+          { id: 1, full_name: 'Jon Snow', email: 'jon@winterfell.com' },
+          { id: 1, full_name: 'Jon Snow', email: 'tyrion@lannisport.com' },
+        ]
+      end
+
+      it 'should create a new Collection instance' do
+        request = Faraday.get(TEST_OPTIONS[:base_url])
+        collection = AbstractApiWrapper::Response::Collection.new(@items, request)
+
+        expect(collection).to be_kind_of(Array)
+        expect(collection.size).to be(2)
+        expect(collection.headers).to be_kind_of(Hashie::Mash)
+        expect(collection.pagination).to be_kind_of(Hashie::Mash)
+      end
+    end
   end
 
 end

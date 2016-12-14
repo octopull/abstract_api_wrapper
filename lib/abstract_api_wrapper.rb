@@ -19,7 +19,7 @@ class AbstractApiWrapper
   end
 
   class Request
-    attr_accessor :path, :filters, :chain
+    attr_accessor :path, :filters, :chain, :params
 
     METHODS_MAP = {
       'all'     => 'get',
@@ -65,8 +65,8 @@ class AbstractApiWrapper
           @params = Hashie::Mash.new(params.first || {})
         end
       when 'destroy'
-        if chain[-2] == 'find'
-          path.push(params.first.to_s)
+        if chain[-2] != 'find'
+          raise NoResourceGiven.new('Missing resource id to destroy')
         end
       else
         path.push(method_name)
@@ -106,6 +106,8 @@ class AbstractApiWrapper
 
       "#{@client.base_url}/#{path.join('/')}?#{query_string}"
     end
+
+    class NoResourceGiven < StandardError; end
   end
 
   class Response
@@ -150,7 +152,7 @@ class AbstractApiWrapper
       end
 
       def headers
-        @headers ||= @request.headers
+        @headers ||= Hashie::Mash.new(@request.headers)
       end
 
       def pagination
