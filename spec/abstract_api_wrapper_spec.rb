@@ -127,6 +127,12 @@ describe 'AbstractApiWrapper' do
       expect(response.body).to be_kind_of(AbstractApiWrapper::Response::Collection)
     end
 
+    it 'should return success? and stauts code' do
+      response = AbstractApiWrapper::Response.new(@request)
+      expect(response.success?).to be(true).or be(false)
+      expect(response.status).to be_kind_of(Integer)
+    end
+
     describe 'Resource' do
       before(:each) do
         @item = { id: 1, full_name: 'Jon Snow', email: 'jon@winterfell.com' }

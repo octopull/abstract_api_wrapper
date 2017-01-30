@@ -110,7 +110,18 @@ class AbstractApiWrapper
     class NoResourceGiven < StandardError; end
   end
 
+  module ResponseStatus
+    def success?
+      @request.success?
+    end
+
+    def status
+      @request.status
+    end
+  end
+
   class Response
+    include ResponseStatus
 
     def initialize(request)
       @request = request
@@ -135,6 +146,7 @@ class AbstractApiWrapper
     end
 
     class Resource < Hashie::Mash
+      include ResponseStatus
       attr_reader :request
 
       def initialize(*options)
@@ -144,6 +156,7 @@ class AbstractApiWrapper
     end
 
     class Collection < Array
+      include ResponseStatus
       attr_reader :request
 
       def initialize(*options)
